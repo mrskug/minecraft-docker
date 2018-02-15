@@ -139,7 +139,8 @@ safe_shutdown() {
     echo "Performing safe shutdown..."
     console_command stop
     echo "Saving world to disk"
-    mv $MINECRAFT_HOME/world/* $MINECRAFT_PWORLD/
+    rm -rf $MINECRAFT_PWORLD/*
+    cp -R $MINECRAFT_HOME/world/* $MINECRAFT_PWORLD/
 }
 
 case "$1" in
