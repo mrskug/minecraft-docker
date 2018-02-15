@@ -2,6 +2,7 @@
 
 TMUX_SESSION=minecraft
 MINECRAFT_HOME="/opt/minecraft"
+MINECRAFT_PWORLD="/opt/mc-persistent-world"
 MINECRAFT_SRC="/usr/src/minecraft"
 MINECRAFT_VERSION=${MINECRAFT_VERSION:-1.8.8}
 MINECRAFT_JAR=${MINECRAFT_JAR:-"minecraft_server.$MINECRAFT_VERSION.jar"}
@@ -103,6 +104,9 @@ update_permissions() {
 run_minecraft() {
     echo "TERM is set to $TERM"
     pushd $MINECRAFT_HOME > /dev/null
+    echo "Copying World to ram"
+    rm -rf $MINECRAFT_HOME/world/*
+    cp -R $MINECRAFT_PWORLD/* $MINECRAFT_HOME/world/
     echo "Running Minecraft"
     echo "MINECRAFT_OPTS: $MINECRAFT_OPTS"
 
@@ -134,6 +138,8 @@ console_command() {
 safe_shutdown() {
     echo "Performing safe shutdown..."
     console_command stop
+    echo "Saving world to disk"
+    mv $MINECRAFT_HOME/world/* $MINECRAFT_PWORLD/
 }
 
 case "$1" in
